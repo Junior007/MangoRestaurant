@@ -10,9 +10,9 @@ namespace mango.product.domain.Interfaces
     public interface IProductsRepository
     {
         Task<IEnumerable<Product>> GetProducts();
-        Task<Product> Get(int id);
-        Task<IEnumerable<Product>> GetProductByName(string name);
-        Task<IEnumerable<Product>> GetProductByCategory(string category);
+        Task<Product> GetProductById(int id);
+        Task<IEnumerable<Product>> GetProductsByName(string name);
+        Task<IEnumerable<Product>> GetProductsByCategory(string category);
         Task<Product> Create(Product product);
         Task<bool> Update(Product product);
         Task<bool> Delete(int id);
