@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\mango.product.application\mango.product.application.csproj" />
+    <ProjectReference Include="..\mango.product.DAL\mango.product.DAL.csproj" />
     <ProjectReference Include="..\mango.product.data\mango.product.data.csproj" />
     <ProjectReference Include="..\mango.product.domain\mango.product.domain.csproj" />
   </ItemGroup>
