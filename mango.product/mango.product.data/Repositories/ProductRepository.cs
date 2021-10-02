@@ -18,7 +18,7 @@ namespace mango.product.data.Repositories
 
     public class ProductRepository : IProductsRepository
     {
-        ProductContext _dbContext;
+        private readonly ProductContext _dbContext;
 
         public ProductRepository(ProductContext dbContext)
         {
@@ -27,84 +27,132 @@ namespace mango.product.data.Repositories
 
         public async Task<DomainModel.Product> Create(DomainModel.Product product)
         {
-            throw new NotImplementedException();
-            /*
-            await _dbContext.Products.AddAsync(product);
-            return product;
-*/
+            DataModel.Product entity = ToData(product);
+            await _dbContext.Products.AddAsync(entity);
+            return ToModel(entity);
+
+        }
+
+        public void Update(DomainModel.Product product)
+        {
+            DataModel.Product entity = ToData(product);
+            _dbContext.Entry(entity).State = EntityState.Modified;
         }
 
         public async Task<bool> Delete(int id)
         {
-            var entity = await _dbContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
-            _dbContext.Products.Remove(entity);
-            return true;
+            try
+            {
+                var entity = await _dbContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+                if (entity == null)
+                    return false;
+                _dbContext.Products.Remove(entity);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
         }
 
         public async Task<DomainModel.Product> GetProductById(int id)
         {
             var entity = await _dbContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
 
-            var productBuilder = new ProductBuilder();
+            return ToModel(entity);
 
-            productBuilder.SetName(entity.Name);
-            productBuilder.SetPrice(entity.Price);
-            productBuilder.SetProductId(entity.ProductId);
-            productBuilder.SetCategoryName(entity.CategoryName);
-            productBuilder.SetImageUrl(entity.ImageUrl);
-            productBuilder.SetDescription(entity.Description);
-
-
-            DomainModel.Product product = productBuilder.Build();
-
-
-            return product;
         }
 
         public async Task<IEnumerable<DomainModel.Product>> GetProductsByCategory(string category)
         {
-            throw new NotImplementedException();
-            /*
-            var entity = await _dbContext.Products.FirstOrDefaultAsync(p => p.CategoryName == category);
-            return entity;
-            */
+            var entities = await _dbContext.Products.Where(p => p.CategoryName == category).ToListAsync();
+
+            var products = entities.Select(entity =>
+            {
+                return ToModel(entity);
+
+            });
+
+
+            return products;
         }
 
         public async Task<IEnumerable<DomainModel.Product>> GetProductsByName(string name)
         {
-            throw new NotImplementedException();
-            /*
-            var entity = await _dbContext.Products.FirstOrDefaultAsync(p => p.Name == name);
-            return entity;
-*/
+            var entities = await _dbContext.Products.Where(p => p.Name == name).ToListAsync();
+
+            var products = entities.Select(entities =>
+            {
+                var productBuilder = new ProductBuilder();
+
+                productBuilder.SetName(entities.Name);
+                productBuilder.SetPrice(entities.Price);
+                productBuilder.SetProductId(entities.ProductId);
+                productBuilder.SetCategoryName(entities.CategoryName);
+                productBuilder.SetImageUrl(entities.ImageUrl);
+                productBuilder.SetDescription(entities.Description);
+
+
+                return productBuilder.Build();
+
+            });
+
+
+            return products;
         }
 
         public async Task<IEnumerable<DomainModel.Product>> GetProducts()
-        {
-            throw new NotImplementedException();
-            /*
-          var entities = await _dbContext.Products.ToListAsync();
-            return entities;
-*/
+        {//TODO: usar DAL
+            var entities = await _dbContext.Products.ToListAsync();
+            var products = entities.Select(entity =>
+            {
+                return ToModel(entity);
+
+            });
+
+            return products;
         }
 
-        public async Task<bool> Update(DomainModel.Product product)
-        {
-            throw new NotImplementedException();
-            /*
-          _dbContext.Entry(product).State = EntityState.Modified;
-            return true;
-*/
-        }
+
         public async Task<bool> SaveChanges()
         {
             await _dbContext.SaveChangesAsync();
 
             return true;
         }
+
+        private DomainModel.Product ToModel(DataModel.Product product)
+        {
+            var productBuilder = new ProductBuilder();
+
+            productBuilder.SetName(product.Name);
+            productBuilder.SetPrice(product.Price);
+            productBuilder.SetProductId(product.ProductId);
+            productBuilder.SetCategoryName(product.CategoryName);
+            productBuilder.SetImageUrl(product.ImageUrl);
+            productBuilder.SetDescription(product.Description);
+
+            return productBuilder.Build();
+
+        }
+
+        private DataModel.Product ToData(DomainModel.Product product)
+        {
+            DataModel.Product entity = new DataModel.Product
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Price = product.Price,
+                CategoryName = product.CategoryName,
+                ImageUrl = product.ImageUrl,
+                Description = product.Description
+            };
+
+            return entity;
+        }
+
     }
-
-
 }
 
 

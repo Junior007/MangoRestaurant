@@ -7,6 +7,8 @@ using mango.product.data.Context;
 using MediatR;
 using store.dal.DataConnections;
 using store.dal.DataConnections.Sql;
+using mango.product.domain.Interfaces;
+using mango.product.data.Repositories;
 
 namespace mango.product.IoC
 {
@@ -21,6 +23,9 @@ namespace mango.product.IoC
 
             //DAL connections
             services.AddTransient<IDatabaseBuilder>(provider => new SqlDatabaseBuilder(configuration["ConnectionStrings:MangoProductDB"]));
+
+            //Repositories
+            services.AddTransient<IProductsRepository, ProductRepository>();
 
             //AutoMapper
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
