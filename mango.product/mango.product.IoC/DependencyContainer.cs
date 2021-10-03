@@ -9,6 +9,8 @@ using store.dal.DataConnections;
 using store.dal.DataConnections.Sql;
 using mango.product.domain.Interfaces;
 using mango.product.data.Repositories;
+using mango.product.application.Interfaces;
+using mango.product.application.Services;
 
 namespace mango.product.IoC
 {
@@ -37,6 +39,11 @@ namespace mango.product.IoC
             assembly = assemblies.Where(ass => ass.FullName != null && ass.FullName.Contains("mango.product.")).ToArray();
             services.AddMediatR(assembly);
 
+
+
+            //Services
+            //Services application
+            services.AddTransient<IProductsService, ProductService>();
 
         }
     }

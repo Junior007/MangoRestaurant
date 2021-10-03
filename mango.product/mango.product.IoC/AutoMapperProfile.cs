@@ -11,17 +11,20 @@ namespace mango.product.IoC
         public AutoMapperProfiles()
         {
 
-            //OUT
-            /*CreateMap<ordering.domain.models.Order, ordering.application.models.Order>();
-            CreateMap<ordering.domain.models.PaymentMethod, ordering.application.models.PaymentMethod>();
+            //Application <--> Domain
+            CreateMap<mango.product.domain.Models.Product, mango.product.application.Models.Product>().ReverseMap();
+
+
+            //IN
+            //CreateMap<ordering.domain.models.PaymentMethod, ordering.application.models.PaymentMethod>();
 
             // IN
-            CreateMap<ordering.application.models.Order, ordering.domain.models.Order>();
-            CreateMap<ordering.application.models.PaymentMethod, ordering.domain.models.PaymentMethod>();
+            //CreateMap<ordering.application.models.Order, ordering.domain.models.Order>();
+            //CreateMap<ordering.application.models.PaymentMethod, ordering.domain.models.PaymentMethod>();
 
 
             //Event Bus
-            CreateMap<infra.eventbus.events.BasketCartCheckoutEvent, ordering.application.models.Order>().ReverseMap(); ;*/
+            /*CreateMap<infra.eventbus.events.BasketCartCheckoutEvent, ordering.application.models.Order>().ReverseMap(); ;*/
 
         }
     }
