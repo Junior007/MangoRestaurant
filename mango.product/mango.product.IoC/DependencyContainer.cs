@@ -11,6 +11,8 @@ using mango.product.domain.Interfaces;
 using mango.product.data.Repositories;
 using mango.product.application.Interfaces;
 using mango.product.application.Services;
+using mango.product.DAL.Services;
+using mango.product.DAL.Interfaces;
 
 namespace mango.product.IoC
 {
@@ -44,6 +46,10 @@ namespace mango.product.IoC
             //Services
             //Services application
             services.AddTransient<IProductsService, ProductService>();
+
+
+            //Services DAL
+            services.AddTransient<IProductsServiceDal, ProductsServiceDal>();
 
         }
     }

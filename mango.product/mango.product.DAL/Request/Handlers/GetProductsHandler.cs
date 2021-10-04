@@ -23,9 +23,14 @@ namespace mango.product.DAL.Request.Handlers
             using (Database database = DatabaseFactory.CreateDatabase(_sqlDatabaseBuilder))
             {
 
-                string sql = $"SELECT  [CLIENTE_NICKNAME] ClienteNickname" +
-                                $"    ,[DESCRIPCION] Descripcion" +
-                                $"  FROM [CLIENTES]";
+                string sql = $" SELECT [ProductId] " +
+                              $"      ,[Name] " +
+                              $"      ,[Price] " +
+                              $"      ,[Description] " +
+                              $"      ,[CategoryName] " +
+                              $"      ,[ImageUrl] " +
+                              $" FROM [Products] ";
+
                 database.Connection.Open();
 
                 products = (List<Product>)(await database.Connection.QueryAsync<Product>(sql));

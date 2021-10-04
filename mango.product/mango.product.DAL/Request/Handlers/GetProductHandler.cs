@@ -25,10 +25,18 @@ namespace mango.product.DAL.Request.Handlers
             using (Database database = DatabaseFactory.CreateDatabase(_sqlDatabaseBuilder))
             {
 
-                string sql = $"SELECT  [CLIENTE_NICKNAME] ClienteNickname" +
-                                $"    ,[DESCRIPCION] Descripcion" +
-                                $"  FROM [CLIENTES]" +
-                                $" WHERE CLIENTE_NICKNAME ={request.ProductId}";
+
+
+                string sql = $"  SELECT [ProductId] " +
+                              $"       ,[Name] " +
+                              $"       ,[Price] " +
+                              $"       ,[Description] " +
+                              $"       ,[CategoryName] " +
+                              $"       ,[ImageUrl] " +
+                              $"  FROM [Products] " +
+                              $" WHERE ProductId={request.ProductId}";
+
+
                 database.Connection.Open();
 
                 product = (List<Product>)(await database.Connection.QueryAsync<Product>(sql));

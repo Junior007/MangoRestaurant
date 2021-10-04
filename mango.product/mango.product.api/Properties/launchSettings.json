@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "mango.services": {
+    "mango.product.api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

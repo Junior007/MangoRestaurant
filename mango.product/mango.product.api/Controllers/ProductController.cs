@@ -1,18 +1,23 @@
 ﻿using mango.product.application.Interfaces;
 using mango.product.application.Models;
+using mango.product.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace mango.product.api.Controllers
 {
-    public class ProductController : Controller
+    [Route("api/v1/[controller]")]
+    [ApiController]
+    public class ProductController : ControllerBase
     {
         private readonly IProductsService _productsService;
+        private readonly IProductsServiceDal _productsServiceDAL;
         private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IProductsService productsService, ILogger<ProductController> logger)
+        public ProductController(IProductsService productsService, IProductsServiceDal productsServiceDAL, ILogger<ProductController> logger)
         {
             _productsService = productsService ?? throw new ArgumentNullException(nameof(productsService));
+            _productsServiceDAL = productsServiceDAL ?? throw new ArgumentNullException(nameof(productsServiceDAL));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -22,16 +27,24 @@ namespace mango.product.api.Controllers
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> Get()
         {
-            var products = await _productsService.Get();
-            if (products == null || !products.Any())
+            try
             {
-                return NotFound();
+                var products = await _productsServiceDAL.Get();
+                if (products == null || !products.Any())
+                {
+                    return NotFound();
+                }
+                return Ok(products);
             }
-            return Ok(products);
+            catch (Exception ex)
+            {
+                _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
+                return BadRequest();
+            }
         }
 
         // GET api/<ProductController>/5
-        [HttpGet("{id:length(24)}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.BadRequest)]
@@ -39,7 +52,7 @@ namespace mango.product.api.Controllers
         {
             try
             {
-                var product = await _productsService.Get(id);
+                var product = await _productsServiceDAL.Get(id);
                 if (product == null)
                 {
                     return NotFound();
@@ -58,12 +71,20 @@ namespace mango.product.api.Controllers
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> GetByName(string name)
         {
-            IEnumerable<Product> products = await _productsService.GetProductsByName(name);
-            if (products == null)
+            try
             {
-                return NotFound();
+                IEnumerable<Product> products = await _productsService.GetProductsByName(name);
+                if (products == null)
+                {
+                    return NotFound();
+                }
+                return Ok(products);
             }
-            return Ok(products);
+            catch (Exception ex)
+            {
+                _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
+                return BadRequest();
+            }
         }
         //
         [HttpGet("[action]/{category}")]
@@ -72,23 +93,35 @@ namespace mango.product.api.Controllers
 
         public async Task<ActionResult> GetByCategory(string category)
         {
-            IEnumerable<Product> products = await _productsService.GetProductsByCategory(category);
-            if (products == null)
+            try
             {
-                return NotFound();
+                IEnumerable<Product> products = await _productsService.GetProductsByCategory(category);
+                if (products == null)
+                {
+                    return NotFound();
+                }
+                return Ok(products);
             }
-            return Ok(products);
+            catch (Exception ex)
+            {
+                _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
+                return BadRequest();
+            }
         }
         // POST api/<ProductController>
         [HttpPost]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.Created)]
         public async Task<ActionResult<Product>> Post([FromBody] Product product)
         {
-            //await _productsService.Create(product);
-
-            //return CreatedAtRoute("Get", new { id = product.Id }, product);
-            //var prod = await _productsService.Get(product.Id);
-            return Created("", await _productsService.Create(product));
+            try
+            {
+                return Created("", await _productsService.Create(product));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
+                return BadRequest();
+            }
         }
 
         // PUT api/<ProductController>/5
@@ -97,12 +130,19 @@ namespace mango.product.api.Controllers
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
-            if (id == product.ProductId)
+            try
             {
-                return Ok(await _productsService.Update(product));
+                if (id == product.ProductId)
+                {
+                    return Ok(await _productsService.Update(product));
+                }
+                return BadRequest("Diferent id");
             }
-            return BadRequest("Diferent id");
-
+            catch (Exception ex)
+            {
+                _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
+                return BadRequest();
+            }
         }
 
         // DELETE api/<ProductController>/5
@@ -111,11 +151,19 @@ namespace mango.product.api.Controllers
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Delete(int id, [FromBody] Product product)
         {
-            if (id == product.ProductId)
+            try
             {
-                return Ok(await _productsService.Delete(id));
+                if (id == product.ProductId)
+                {
+                    return Ok(await _productsService.Delete(id));
+                }
+                return BadRequest("Diferent id");
             }
-            return BadRequest("Diferent id");
+            catch (Exception ex)
+            {
+                _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
+                return BadRequest();
+            }
         }
     }
 }
