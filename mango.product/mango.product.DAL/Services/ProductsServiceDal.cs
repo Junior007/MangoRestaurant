@@ -25,6 +25,21 @@ namespace mango.product.DAL.Services
             var requestModel = new GetProduct { ProductId = productId };
             return await _mediator.Send(requestModel);
         }
+
+        public async Task<List<Product>> GetProductsByCategory(string category)
+        {
+            var requestModel = new GetProductsByCategory { CategoryName = category };
+            return await _mediator.Send(requestModel);
+
+            
+        }
+
+        public async Task<List<Product>> GetProductsByName(string name)
+        {
+            var requestModel = new GetProductsByName { Name = name };
+            return await _mediator.Send(requestModel);
+            
+        }
     }
 
 

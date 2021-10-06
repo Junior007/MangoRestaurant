@@ -3,8 +3,8 @@ using MediatR;
 
 namespace mango.product.DAL.Request.QueryModels
 {
-    public class GetProducts : IRequest<List<Product>>
+    public class GetProductsByCategory:IRequest<List<Product>>
     {
-
+        public string CategoryName { get; set; }
     }
 }

@@ -6,5 +6,7 @@ namespace mango.product.DAL.Interfaces
     {
         Task<List<Product>> Get();
         Task<Product> Get(int productId);
+        Task<List<Product>> GetProductsByName(string name);
+        Task<List<Product>> GetProductsByCategory(string category);
     }
 }

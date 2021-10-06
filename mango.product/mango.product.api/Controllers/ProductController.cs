@@ -1,5 +1,6 @@
 ﻿using mango.product.application.Interfaces;
 using mango.product.application.Models;
+using DALModels = mango.product.DAL.Models;
 using mango.product.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -73,7 +74,7 @@ namespace mango.product.api.Controllers
         {
             try
             {
-                IEnumerable<Product> products = await _productsService.GetProductsByName(name);
+                IEnumerable<DALModels.Product> products = await _productsServiceDAL.GetProductsByName(name);
                 if (products == null)
                 {
                     return NotFound();
@@ -95,7 +96,7 @@ namespace mango.product.api.Controllers
         {
             try
             {
-                IEnumerable<Product> products = await _productsService.GetProductsByCategory(category);
+                IEnumerable<DALModels.Product> products = await _productsServiceDAL.GetProductsByCategory(category);
                 if (products == null)
                 {
                     return NotFound();
@@ -125,7 +126,7 @@ namespace mango.product.api.Controllers
         }
 
         // PUT api/<ProductController>/5
-        [HttpPut("{id:length(24)}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Put(int id, [FromBody] Product product)
@@ -146,7 +147,7 @@ namespace mango.product.api.Controllers
         }
 
         // DELETE api/<ProductController>/5
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Delete(int id, [FromBody] Product product)
