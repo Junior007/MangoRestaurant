@@ -154,6 +154,8 @@ namespace mango.product.api.Controllers
         {
             try
             {
+
+
                 if (id == product.ProductId)
                 {
                     return Ok(await _productsService.Delete(id));

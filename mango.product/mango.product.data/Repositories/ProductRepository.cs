@@ -1,8 +1,7 @@
 ﻿using mango.product.data.Context;
 using mango.product.domain.Interfaces;
-
-using DomainModel = mango.product.domain.Models;
-using DataModel = mango.product.data.Models;
+using DomainModels = mango.product.domain.Models;
+using DataModels = mango.product.data.Models;
 using mango.product.domain.Builders;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,41 +21,37 @@ namespace mango.product.data.Repositories
 
         public ProductRepository(ProductContext dbContext)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext)); ;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext)); 
         }
 
-        public async Task<DomainModel.Product> Create(DomainModel.Product product)
+        public async Task<DomainModels.Product> Create(DomainModels.Product product)
         {
-            DataModel.Product entity = ToData(product);
+            DataModels.Product entity = ToData(product);
             await _dbContext.Products.AddAsync(entity);
             return ToModel(entity);
 
         }
 
-        public void Update(DomainModel.Product product)
+        public void Update(DomainModels.Product product)
         {
-            DataModel.Product entity = ToData(product);
+            DataModels.Product entity = ToData(product);
             _dbContext.Entry(entity).State = EntityState.Modified;
         }
 
-        public async Task<bool> Delete(int id)
+        public bool Delete(int id)
         {
-            try
-            {
-                var entity = await _dbContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
-                if (entity == null)
-                    return false;
-                _dbContext.Products.Remove(entity);
-                return true;
-            }
-            catch (Exception)
-            {
+            var entity = _dbContext.Products.FirstOrDefault(p => p.ProductId == id);
+
+            if (entity == null)
                 return false;
-            }
+
+            _dbContext.Products.Remove(entity);
+
+            return true;
 
         }
 
-        public async Task<DomainModel.Product> GetProductById(int id)
+        public async Task<DomainModels.Product> GetProductById(int id)
         {
             var entity = await _dbContext.Products.FirstOrDefaultAsync(p => p.ProductId == id);
 
@@ -64,7 +59,7 @@ namespace mango.product.data.Repositories
 
         }
 
-        public async Task<IEnumerable<DomainModel.Product>> GetProductsByCategory(string category)
+        public async Task<IEnumerable<DomainModels.Product>> GetProductsByCategory(string category)
         {
             var entities = await _dbContext.Products.Where(p => p.CategoryName == category).ToListAsync();
 
@@ -78,7 +73,7 @@ namespace mango.product.data.Repositories
             return products;
         }
 
-        public async Task<IEnumerable<DomainModel.Product>> GetProductsByName(string name)
+        public async Task<IEnumerable<DomainModels.Product>> GetProductsByName(string name)
         {
             var entities = await _dbContext.Products.Where(p => p.Name == name).ToListAsync();
 
@@ -102,7 +97,7 @@ namespace mango.product.data.Repositories
             return products;
         }
 
-        public async Task<IEnumerable<DomainModel.Product>> GetProducts()
+        public async Task<IEnumerable<DomainModels.Product>> GetProducts()
         {//TODO: usar DAL
             var entities = await _dbContext.Products.ToListAsync();
             var products = entities.Select(entity =>
@@ -121,8 +116,11 @@ namespace mango.product.data.Repositories
 
             return true;
         }
-
-        private DomainModel.Product ToModel(DataModel.Product product)
+        private void Detach<T>(T entity)
+        {
+            _dbContext.Entry(entity).State = EntityState.Detached;
+        }
+        private DomainModels.Product ToModel(DataModels.Product product)
         {
             var productBuilder = new ProductBuilder();
 
@@ -137,9 +135,9 @@ namespace mango.product.data.Repositories
 
         }
 
-        private DataModel.Product ToData(DomainModel.Product product)
+        private DataModels.Product ToData(DomainModels.Product product)
         {
-            DataModel.Product entity = new DataModel.Product
+            DataModels.Product entity = new DataModels.Product
             {
                 ProductId = product.ProductId,
                 Name = product.Name,

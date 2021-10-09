@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using mango.product.domain.Builders;
 
 namespace mango.product.application.Services
 {
@@ -23,13 +24,15 @@ namespace mango.product.application.Services
 
         public async Task<Product> Create(Product product)
         {
-            var productForCreate = _mapper.Map<mango.product.domain.Models.Product>(product);
+            var productForCreate = ToModel(product);
             var productCreated = await _productsRepository.Create(productForCreate);
+            await _productsRepository.SaveChanges();
+
             return _mapper.Map<Product>(productCreated);
         }
         public async Task<bool> Update(Product product)
         {
-            var productForUpdate = _mapper.Map<DomainModels.Product>(product);
+            var productForUpdate = ToModel(product);
              _productsRepository.Update(productForUpdate);
             return await _productsRepository.SaveChanges();
 
@@ -69,5 +72,19 @@ namespace mango.product.application.Services
             return _mapper.Map<IEnumerable<Product>>(products);
         }
 
+        private DomainModels.Product ToModel(Product product)
+        {
+            var productBuilder = new ProductBuilder();
+
+            productBuilder.SetName(product.Name);
+            productBuilder.SetPrice(product.Price);
+            productBuilder.SetProductId(product.ProductId);
+            productBuilder.SetCategoryName(product.CategoryName);
+            productBuilder.SetImageUrl(product.ImageUrl);
+            productBuilder.SetDescription(product.Description);
+
+            return productBuilder.Build();
+
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace mango.product.domain.Interfaces
         Task<IEnumerable<Product>> GetProductsByCategory(string category);
         Task<Product> Create(Product product);
         void Update(Product product);
-        Task<bool> Delete(int id);
+        bool Delete(int id);
         Task<bool> SaveChanges();
 
 
