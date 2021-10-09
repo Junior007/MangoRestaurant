@@ -22,4 +22,8 @@
     <ProjectReference Include="..\mango.product.domain\mango.product.domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

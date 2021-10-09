@@ -40,7 +40,7 @@ namespace mango.product.api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -63,7 +63,7 @@ namespace mango.product.api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
         //
@@ -84,7 +84,7 @@ namespace mango.product.api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
         //
@@ -106,7 +106,7 @@ namespace mango.product.api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
         // POST api/<ProductController>
@@ -121,7 +121,7 @@ namespace mango.product.api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -135,14 +135,14 @@ namespace mango.product.api.Controllers
             {
                 if (id == product.ProductId)
                 {
-                    return Ok(await _productsService.Update(product));
+                    return Created("",await _productsService.Update(product));
                 }
                 return BadRequest("Diferent id");
             }
             catch (Exception ex)
             {
                 _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -165,7 +165,7 @@ namespace mango.product.api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }

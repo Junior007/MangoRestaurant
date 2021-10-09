@@ -13,11 +13,10 @@ namespace mango.product.domain.Interfaces
         Task<Product> GetProductById(int id);
         Task<IEnumerable<Product>> GetProductsByName(string name);
         Task<IEnumerable<Product>> GetProductsByCategory(string category);
-        Task<Product> Create(Product product);
-        void Update(Product product);
+        Guid Create(Product product);
+        Guid Update(Product product);
         bool Delete(int id);
         Task<bool> SaveChanges();
-
-
+        Product GetScope(Guid key);
     }
 }

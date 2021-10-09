@@ -25,16 +25,24 @@ namespace mango.product.application.Services
         public async Task<Product> Create(Product product)
         {
             var productForCreate = ToModel(product);
-            var productCreated = await _productsRepository.Create(productForCreate);
+            Guid key = _productsRepository.Create(productForCreate);
+
             await _productsRepository.SaveChanges();
+
+            DomainModels.Product productCreated = _productsRepository.GetScope(key);
 
             return _mapper.Map<Product>(productCreated);
         }
-        public async Task<bool> Update(Product product)
+        public async Task<Product> Update(Product product)
         {
             var productForUpdate = ToModel(product);
-             _productsRepository.Update(productForUpdate);
-            return await _productsRepository.SaveChanges();
+            Guid key = _productsRepository.Update(productForUpdate);
+
+            await _productsRepository.SaveChanges();
+
+            DomainModels.Product productUpdated = _productsRepository.GetScope(key);
+
+            return _mapper.Map<Product>(productUpdated);
 
         }
         public async Task<bool> Delete(int id)
@@ -82,6 +90,7 @@ namespace mango.product.application.Services
             productBuilder.SetCategoryName(product.CategoryName);
             productBuilder.SetImageUrl(product.ImageUrl);
             productBuilder.SetDescription(product.Description);
+            productBuilder.SetRowVersion(product.RowVersion);
 
             return productBuilder.Build();
 

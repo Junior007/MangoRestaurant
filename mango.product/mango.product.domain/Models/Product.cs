@@ -18,6 +18,7 @@ namespace mango.product.domain.Models
             Description = builder.Description;
             CategoryName = builder.CategoryName;
             ImageUrl = builder.ImageUrl;
+            RowVersion = builder.RowVersion;
 
         }
 
@@ -28,7 +29,7 @@ namespace mango.product.domain.Models
         public string Description { get; private set; }
         public string CategoryName { get; private set; }
         public string ImageUrl { get; private set; }
-
+        public byte[] RowVersion { get; private set; }
 
     }
 }

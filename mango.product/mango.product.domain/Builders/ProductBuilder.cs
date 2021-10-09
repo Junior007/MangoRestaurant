@@ -15,23 +15,30 @@ namespace mango.product.domain.Builders
         public string ImageUrl { get; private set; }
         public string Description { get; private set; }
         public int ProductId { get; private set; }
+        public byte[] RowVersion { get; private set; }
+
+        public ProductBuilder SetProductId(int productId)
+        {
+            ProductId = productId;
+            return this;
+        }
+        public ProductBuilder SetRowVersion(byte[] version)
+        {
+            RowVersion = version;
+            return this;
+        }
 
         public ProductBuilder SetName(string name)
         {
             Name = name;
             return this;
         }
+
         public ProductBuilder SetPrice(double price)
         {
             Price = price;
             return this;
 
-        }
-
-        public ProductBuilder SetProductId(int productId)
-        {
-            ProductId = productId;
-            return this;
         }
 
         public ProductBuilder SetCategoryName(string categoryName)

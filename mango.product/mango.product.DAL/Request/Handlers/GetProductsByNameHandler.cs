@@ -31,6 +31,7 @@ namespace mango.product.DAL.Request.Handlers
                               $"       ,[Description] " +
                               $"       ,[CategoryName] " +
                               $"       ,[ImageUrl] " +
+                              $"       ,[RowVersion] " +
                               $"  FROM [Products] " +
                               $" WHERE Name=@names";
 

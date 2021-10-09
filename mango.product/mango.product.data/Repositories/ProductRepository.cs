@@ -1,41 +1,76 @@
 ﻿using mango.product.data.Context;
-using mango.product.domain.Interfaces;
-using DomainModels = mango.product.domain.Models;
-using DataModels = mango.product.data.Models;
 using mango.product.domain.Builders;
+using mango.product.domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Collections;
+using DataModels = mango.product.data.Models;
+using DomainModels = mango.product.domain.Models;
 
 namespace mango.product.data.Repositories
 {
 
-
     public class ProductRepository : IProductsRepository
     {
+        private static readonly Hashtable entitiesScope = new Hashtable();
+
         private readonly ProductContext _dbContext;
 
         public ProductRepository(ProductContext dbContext)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext)); 
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<DomainModels.Product> Create(DomainModels.Product product)
+        public Guid Create(DomainModels.Product product)
         {
+
+            Guid key;
+
             DataModels.Product entity = ToData(product);
-            await _dbContext.Products.AddAsync(entity);
-            return ToModel(entity);
+
+
+            if(!entitiesScope.Contains(entity))
+            {
+                key = Guid.NewGuid();
+                entitiesScope.Add(key,entity);
+            }
+            else
+            {
+                throw new Exception("Entity already exists!!!");
+
+            }
+
+            //await _dbContext.Products.AddAsync(entity);
+            _dbContext.Products.Add(entity);
+
+            return key;
 
         }
 
-        public void Update(DomainModels.Product product)
+        public Guid Update(DomainModels.Product product)
         {
+            Guid key;
+
+
             DataModels.Product entity = ToData(product);
+
+            
+            if (!entitiesScope.Contains(entity))
+            {
+                key = Guid.NewGuid();
+                entitiesScope.Add(key, entity);
+            }
+            else
+            {
+                var keys = entitiesScope.Keys.Cast<Guid>();   
+                
+                key = keys.FirstOrDefault(k => entitiesScope[k] == entity);
+
+            }
+
             _dbContext.Entry(entity).State = EntityState.Modified;
+
+            return key;
+
         }
 
         public bool Delete(int id)
@@ -116,6 +151,13 @@ namespace mango.product.data.Repositories
 
             return true;
         }
+
+        public DomainModels.Product GetScope(Guid key) {  
+            
+            return ToModel((DataModels.Product)entitiesScope[key]); 
+        
+        }
+
         private void Detach<T>(T entity)
         {
             _dbContext.Entry(entity).State = EntityState.Detached;
@@ -130,6 +172,7 @@ namespace mango.product.data.Repositories
             productBuilder.SetCategoryName(product.CategoryName);
             productBuilder.SetImageUrl(product.ImageUrl);
             productBuilder.SetDescription(product.Description);
+            productBuilder.SetRowVersion(product.RowVersion);
 
             return productBuilder.Build();
 
@@ -144,7 +187,8 @@ namespace mango.product.data.Repositories
                 Price = product.Price,
                 CategoryName = product.CategoryName,
                 ImageUrl = product.ImageUrl,
-                Description = product.Description
+                Description = product.Description,
+                RowVersion = product.RowVersion,
             };
 
             return entity;

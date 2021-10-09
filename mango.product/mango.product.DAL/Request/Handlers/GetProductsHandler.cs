@@ -29,6 +29,7 @@ namespace mango.product.DAL.Request.Handlers
                               $"      ,[Description] " +
                               $"      ,[CategoryName] " +
                               $"      ,[ImageUrl] " +
+                              $"       ,[RowVersion] " +
                               $" FROM [Products] ";
 
                 database.Connection.Open();

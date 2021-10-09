@@ -10,7 +10,7 @@ namespace mango.product.application.Interfaces
         Task<IEnumerable<Product>> GetProductsByName(string name);
         Task<IEnumerable<Product>> GetProductsByCategory(string category);
         Task<Product> Create(Product product);
-        Task<bool> Update(Product product);
+        Task<Product> Update(Product product);
         Task<bool> Delete(int id);
     }
 
