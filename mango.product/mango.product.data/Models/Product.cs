@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace mango.product.data.Models
 {
-    
-    public class Product
+
+    public class Product : IEntity
     {
         [Key]
         public int ProductId { get; set; }
@@ -24,6 +24,11 @@ namespace mango.product.data.Models
         [ConcurrencyCheck]
         [Timestamp]
         public byte[] RowVersion { get; set; }
+
+        public bool Equals(Product product)
+        {
+            return this.ProductId == product.ProductId;
+        }
 
 
     }

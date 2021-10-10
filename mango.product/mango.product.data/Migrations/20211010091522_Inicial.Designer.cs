@@ -10,7 +10,7 @@ using mango.product.data.Context;
 namespace mango.product.data.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20211009093523_Inicial")]
+    [Migration("20211010091522_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

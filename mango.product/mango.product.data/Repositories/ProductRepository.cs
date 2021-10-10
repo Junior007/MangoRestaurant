@@ -1,4 +1,5 @@
 ﻿using mango.product.data.Context;
+using mango.product.data.Infrastructure.ChangeCache;
 using mango.product.domain.Builders;
 using mango.product.domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,24 @@ using DomainModels = mango.product.domain.Models;
 
 namespace mango.product.data.Repositories
 {
+    internal class ItemChanged<T>
+    {
+
+        public ItemChanged(Guid id, T item)
+        {
+            Id = id;
+            Item = item;
+        }
+        public Guid Id { get; internal set; }
+        public T Item { get; internal set; }
+
+    }
+
 
     public class ProductRepository : IProductsRepository
     {
-        private static readonly Hashtable entitiesScope = new Hashtable();
+
+        private readonly ItemsChanged<DataModels.Product> updatedProducts = new ItemsChanged<DataModels.Product>();
 
         private readonly ProductContext _dbContext;
 
@@ -20,26 +35,24 @@ namespace mango.product.data.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+
+        public DomainModels.Product GetScope(Guid key)
+        {
+            var entity = updatedProducts.GetScope(key);
+            if(entity!=null)
+                return ToModel(entity);
+            return null;
+
+        }
+
+
         public Guid Create(DomainModels.Product product)
         {
 
-            Guid key;
-
             DataModels.Product entity = ToData(product);
 
+            Guid key = updatedProducts.SetScope(entity);
 
-            if(!entitiesScope.Contains(entity))
-            {
-                key = Guid.NewGuid();
-                entitiesScope.Add(key,entity);
-            }
-            else
-            {
-                throw new Exception("Entity already exists!!!");
-
-            }
-
-            //await _dbContext.Products.AddAsync(entity);
             _dbContext.Products.Add(entity);
 
             return key;
@@ -48,24 +61,10 @@ namespace mango.product.data.Repositories
 
         public Guid Update(DomainModels.Product product)
         {
-            Guid key;
-
 
             DataModels.Product entity = ToData(product);
 
-            
-            if (!entitiesScope.Contains(entity))
-            {
-                key = Guid.NewGuid();
-                entitiesScope.Add(key, entity);
-            }
-            else
-            {
-                var keys = entitiesScope.Keys.Cast<Guid>();   
-                
-                key = keys.FirstOrDefault(k => entitiesScope[k] == entity);
-
-            }
+            Guid key = updatedProducts.SetScope(entity);
 
             _dbContext.Entry(entity).State = EntityState.Modified;
 
@@ -152,11 +151,7 @@ namespace mango.product.data.Repositories
             return true;
         }
 
-        public DomainModels.Product GetScope(Guid key) {  
-            
-            return ToModel((DataModels.Product)entitiesScope[key]); 
-        
-        }
+
 
         private void Detach<T>(T entity)
         {
