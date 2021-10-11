@@ -21,15 +21,17 @@ namespace mango.web.Controllers
 
         public async Task<IActionResult> ProductIndex()
         {
-            List<ProductDto> list = new();
-            //var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var accessToken = "";
-            var response = await _productService.GetAllProductsAsync<ResponseDto>(accessToken);
+            List<ProductDto> list = await _productService.GetAllProductsAsync<List<ProductDto>>("");
+
+            return View(list);
+
+            /*
+            var response = await _productService.GetAllProductsAsync<ResponseDto>("");
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<ProductDto>>(Convert.ToString(response.Result));
             }
-            return View(list);
+            return View(list);*/
         }
 
         public async Task<IActionResult> ProductCreate()
