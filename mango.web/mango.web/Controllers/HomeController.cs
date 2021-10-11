@@ -30,20 +30,24 @@ namespace mango.web.Controllers
 
         public async Task<IActionResult> Index()
         {
-                       List<ProductDto> list = new();
+            List<ProductDto> list = await _productService.GetAllProductsAsync<List<ProductDto>>("");
+
+            return View(list);
+
+            /*
             var response = await _productService.GetAllProductsAsync<ResponseDto>("");
-            if(response!=null && response.IsSuccess)
+            if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<ProductDto>>(Convert.ToString(response.Result));
             }
-            return View(list);
+            return View(list);*/
         }
 
         [Authorize]
         public async Task<IActionResult> Details(int productId)
         {
             ProductDto model = new();
-            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId,"");
+            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, "");
             if (response != null && response.IsSuccess)
             {
                 model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
@@ -71,7 +75,7 @@ namespace mango.web.Controllers
             };
 
             var resp = await _productService.GetProductByIdAsync<ResponseDto>(productDto.ProductId, "");
-            if(resp!=null && resp.IsSuccess)
+            if (resp != null && resp.IsSuccess)
             {
                 cartDetails.Product = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(resp.Result));
             }
@@ -103,7 +107,7 @@ namespace mango.web.Controllers
         [Authorize]
         public async Task<IActionResult> Login()
         {
-            
+
             return RedirectToAction(nameof(Index));
         }
 
