@@ -43,9 +43,14 @@ namespace mango.web.Controllers
             return View(list);*/
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Details(int productId)
         {
+
+            ProductDto model = await _productService.GetProductByIdAsync<ProductDto>(productId, "");
+            return View(model);
+
+            /*
             ProductDto model = new();
             var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, "");
             if (response != null && response.IsSuccess)
@@ -53,11 +58,12 @@ namespace mango.web.Controllers
                 model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
             }
             return View(model);
+            */
         }
 
         [HttpPost]
         [ActionName("Details")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> DetailsPost(ProductDto productDto)
         {
             CartDto cartDto = new()

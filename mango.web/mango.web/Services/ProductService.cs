@@ -33,7 +33,7 @@ namespace mango.web.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = HttpMethod.Delete,
-                Url = SD.ProductAPIBase + "/api/v1/Product/"+id,
+                Url = SD.ProductAPIBase + $"/api/v1/Product/{id}",
                 AccessToken = token
             });
         }
@@ -53,7 +53,7 @@ namespace mango.web.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = HttpMethod.Get,
-                Url = SD.ProductAPIBase + "/api/v1/Product/"+id,
+                Url = SD.ProductAPIBase + $"/api/v1/Product/{id}",
                 AccessToken = token
             });
         }
@@ -64,7 +64,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Put,
                 Data = productDto,
-                Url = SD.ProductAPIBase + "/api/v1/Product",
+                Url = SD.ProductAPIBase + $"/api/v1/Product/{productDto.ProductId}",
                 AccessToken = token
             });
         }

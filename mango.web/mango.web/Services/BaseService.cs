@@ -24,7 +24,7 @@ namespace mango.web.Services
 
         public async Task<T> SendAsync<T>(ApiRequest apiRequest)
         {
-            try
+            //try
             {
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
@@ -57,7 +57,7 @@ namespace mango.web.Services
                 return apiResponseDto;
 
             }
-            catch (Exception e)
+            /*catch (Exception e)
             {
                 var dto = new ResponseDto
                 {
@@ -68,7 +68,7 @@ namespace mango.web.Services
                 var res = JsonConvert.SerializeObject(dto);
                 var apiResponseDto = JsonConvert.DeserializeObject<T>(res);
                 return apiResponseDto;
-            }
+            }*/
         }
 
         public void Dispose()

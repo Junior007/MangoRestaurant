@@ -3,6 +3,7 @@
 
 <form asp-action="ProductEdit">
     <input asp-for="ProductId" hidden />
+    @Html.HiddenFor(model => model.RowVersion)
     <br />
     <div class="container border p-3">
         <h1 class="text-primary">Edit Product</h1>

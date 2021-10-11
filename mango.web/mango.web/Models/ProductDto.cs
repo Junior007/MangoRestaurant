@@ -18,7 +18,7 @@ namespace mango.web.Models
         public string Description { get; set; }
         public string CategoryName { get; set; }
         public string ImageUrl { get; set; }
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
         [Range(1, 100)]
         public int Count { get; set; }
     }
