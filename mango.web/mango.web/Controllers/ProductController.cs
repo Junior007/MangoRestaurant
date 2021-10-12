@@ -136,7 +136,7 @@ namespace mango.web.Controllers
                 }*/
 
                 var accessToken = "";
-                var response = await _productService.DeleteProductAsync<bool>(model.ProductId, accessToken);
+                var response = await _productService.DeleteProductAsync<bool>(model, accessToken);
                 if (response)
                 {
                     return RedirectToAction(nameof(ProductIndex));

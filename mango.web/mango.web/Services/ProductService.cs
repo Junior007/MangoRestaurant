@@ -28,12 +28,13 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> DeleteProductAsync<T>(int id, string token)
+        public async Task<T> DeleteProductAsync<T>(ProductDto productDto, string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = HttpMethod.Delete,
-                Url = SD.ProductAPIBase + $"/api/v1/Product/{id}",
+                Data = productDto,
+                Url = SD.ProductAPIBase + $"/api/v1/Product/{productDto.ProductId}",
                 AccessToken = token
             });
         }

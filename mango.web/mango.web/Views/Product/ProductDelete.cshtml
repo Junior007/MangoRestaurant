@@ -2,8 +2,15 @@
 
 
 <form asp-action="ProductDelete">
-    <input asp-for="ProductId" hidden />
-    <br />
+    @Html.HiddenFor(model => model.RowVersion)
+
+    <input asp-for="ProductId" hidden" />
+    <input asp-for="Name" hidden />
+    <input asp-for="ImageUrl" hidden />
+    <input asp-for="Price" hidden />
+    <input asp-for="CategoryName" hidden />
+    <input asp-for="Description" hidden />
+v    <br />
     <div class="container border p-3">
         <h1 class="text-primary">Delete Product</h1>
 
