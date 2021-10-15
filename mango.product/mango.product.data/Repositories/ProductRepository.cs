@@ -9,18 +9,6 @@ using DomainModels = mango.product.domain.Models;
 
 namespace mango.product.data.Repositories
 {
-    internal class ItemChanged<T>
-    {
-
-        public ItemChanged(Guid id, T item)
-        {
-            Id = id;
-            Item = item;
-        }
-        public Guid Id { get; internal set; }
-        public T Item { get; internal set; }
-
-    }
 
 
     public class ProductRepository : IProductsRepository
@@ -36,7 +24,7 @@ namespace mango.product.data.Repositories
         }
 
 
-        public DomainModels.Product GetScope(Guid key)
+        public DomainModels.Product GetScope(int key)
         {
             var entity = updatedProducts.GetScope(key);
             if(entity!=null)
@@ -46,12 +34,12 @@ namespace mango.product.data.Repositories
         }
 
 
-        public Guid Create(DomainModels.Product product)
+        public int Create(DomainModels.Product product)
         {
 
             DataModels.Product entity = ToData(product);
 
-            Guid key = updatedProducts.SetScope(entity);
+            int key = updatedProducts.SetScope(entity);
 
             _dbContext.Products.Add(entity);
 
@@ -59,12 +47,12 @@ namespace mango.product.data.Repositories
 
         }
 
-        public Guid Update(DomainModels.Product product)
+        public int Update(DomainModels.Product product)
         {
 
             DataModels.Product entity = ToData(product);
 
-            Guid key = updatedProducts.SetScope(entity);
+            int key = updatedProducts.SetScope(entity);
 
             _dbContext.Entry(entity).State = EntityState.Modified;
 

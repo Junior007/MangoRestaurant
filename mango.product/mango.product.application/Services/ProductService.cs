@@ -25,7 +25,7 @@ namespace mango.product.application.Services
         public async Task<Product> Create(Product product)
         {
             var productForCreate = ToModel(product);
-            Guid key = _productsRepository.Create(productForCreate);
+            int key = _productsRepository.Create(productForCreate);
 
             await _productsRepository.SaveChanges();
 
@@ -36,7 +36,7 @@ namespace mango.product.application.Services
         public async Task<Product> Update(Product product)
         {
             var productForUpdate = ToModel(product);
-            Guid key = _productsRepository.Update(productForUpdate);
+            int key = _productsRepository.Update(productForUpdate);
 
             await _productsRepository.SaveChanges();
 

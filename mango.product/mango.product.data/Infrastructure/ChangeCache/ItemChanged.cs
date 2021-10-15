@@ -10,12 +10,12 @@ namespace mango.product.data.Infrastructure.ChangeCache
     internal class ItemChanged<T> where T:IEntity
     {
 
-        public ItemChanged(Guid id, T item)
+        public ItemChanged(int id, T item)
         {
             Key = id;
             Item = item;
         }
-        public Guid Key { get; internal set; }
+        public int Key { get; internal set; }
         public T Item { get; internal set; }
 
     }

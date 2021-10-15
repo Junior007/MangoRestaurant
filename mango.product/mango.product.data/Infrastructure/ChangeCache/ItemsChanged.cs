@@ -13,8 +13,8 @@ namespace mango.product.data.Infrastructure.ChangeCache
     {
         private readonly List<ItemChanged<T>> updatedItems = new List<ItemChanged<T>>();
 
-
-        public T GetScope(Guid key)
+        private int NextGuid = 1;
+        public T GetScope(int key)
         {
             var itemScoped = updatedItems.FirstOrDefault(x => x.Key == key);
             if (itemScoped != null)
@@ -26,10 +26,10 @@ namespace mango.product.data.Infrastructure.ChangeCache
         }
 
 
-        public Guid SetScope(T entity)
+        public int SetScope(T entity)
         {
 
-            Guid key;
+            int key;
 
             var itemChanged = updatedItems.FirstOrDefault(e => e.Item.Equals(entity));
 
@@ -38,7 +38,7 @@ namespace mango.product.data.Infrastructure.ChangeCache
 
             if (itemChanged==null)
             {
-                key = Guid.NewGuid();
+                key = NewGuid();
                 updatedItems.Add(new ItemChanged<T>(key, entity));
             }
             else
@@ -48,6 +48,11 @@ namespace mango.product.data.Infrastructure.ChangeCache
             }
 
             return key;
+        }
+
+        private int NewGuid()
+        {
+            return NextGuid++;
         }
     }
 
