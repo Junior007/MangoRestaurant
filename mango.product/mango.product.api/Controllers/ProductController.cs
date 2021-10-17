@@ -4,6 +4,7 @@ using DALModels = mango.product.DAL.Models;
 using mango.product.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace mango.product.api.Controllers
 {
@@ -111,6 +112,7 @@ namespace mango.product.api.Controllers
         }
         // POST api/<ProductController>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.Created)]
         public async Task<ActionResult<Product>> Post([FromBody] Product product)
         {
@@ -129,6 +131,7 @@ namespace mango.product.api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.BadRequest)]
+        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
             try
@@ -150,6 +153,7 @@ namespace mango.product.api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.BadRequest)]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Delete(int id, [FromBody] Product product)
         {
             try

@@ -1,8 +1,11 @@
+using Duende.IdentityServer.AspNetIdentity;
+using Duende.IdentityServer.Services;
 using mango.identity;
 using mango.identity.DBContext;
 
 using mango.identity.Initializer;
 using mango.identity.Models;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +33,7 @@ namespace mango.identity
                 .AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddIdentityServer(options =>
+            var builder = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
@@ -44,10 +47,8 @@ namespace mango.identity
 
             //Fill database for first time
             services.AddScoped<IDBInitializer, DBInitializer>();
-
-            /*services.AddScoped<IDbInitializer, DbInitializer>();
-            services.AddScoped<IProfileService, ProfileService>();*/
-            //services.AddDeveloperSigningCredential();
+            services.AddScoped<IProfileService, mango.identity.Services.ProfileService>();
+            builder.AddDeveloperSigningCredential();
 
 
             // Add services to the container.

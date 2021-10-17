@@ -49,13 +49,18 @@ namespace mango.web.Services
 
                 apiResponse = await client.SendAsync(message);
 
-                var apiContent = await apiResponse.Content.ReadAsStringAsync();
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    var apiContent = await apiResponse.Content.ReadAsStringAsync();
 
 
-                
-                var apiResponseDto = JsonConvert.DeserializeObject<T>(apiContent);
-                return apiResponseDto;
 
+                    var apiResponseDto = JsonConvert.DeserializeObject<T>(apiContent);
+                    return apiResponseDto;
+                }
+                //TODO: hay que gestionar el error
+                throw new Exception(apiResponse.ReasonPhrase);
             }
             /*catch (Exception e)
             {

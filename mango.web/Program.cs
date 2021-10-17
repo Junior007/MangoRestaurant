@@ -1,12 +1,45 @@
 using mango.web;
 using mango.web.Services;
 using mango.web.Services.IServices;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+SD.ProductAPIBase = builder.Configuration["ServiceUrls:ProductAPI"];
+SD.ShoppingCartAPIBase = builder.Configuration["ServiceUrls:ShoppingCartAPI"];
+SD.CouponAPIBase = builder.Configuration["ServiceUrls:CouponAPI"];
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//Add security options
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "oidc";
+})
+    .AddCookie("Cookies", c => c.ExpireTimeSpan = TimeSpan.FromMinutes(10))
+    .AddOpenIdConnect("oidc", options =>
+    {
+        options.Authority = builder.Configuration["ServiceUrls:IdentityAPI"];
+        options.GetClaimsFromUserInfoEndpoint = true;
+        options.ClientId = "mango";
+        options.ClientSecret = "My clave!#2";
+        options.ResponseType = "code";
+        options.ClaimActions.MapJsonKey("role", "role", "role");
+        options.ClaimActions.MapJsonKey("sub", "sub", "sub");
+        options.TokenValidationParameters.NameClaimType = "name";
+        options.TokenValidationParameters.RoleClaimType = "role";
+        options.Scope.Add("mango");
+        options.SaveTokens = true;
+
+    });
+
+
+
+//Inject services
 builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddHttpClient<ICartService, CartService>();
 builder.Services.AddHttpClient<ICouponService, CouponService>();
@@ -22,9 +55,7 @@ builder.Services.AddScoped<ICouponService, CouponService>();
 var app = builder.Build();
 
 
-SD.ProductAPIBase = app.Configuration["ServiceUrls:ProductAPI"];
-SD.ShoppingCartAPIBase = app.Configuration["ServiceUrls:ShoppingCartAPI"];
-SD.CouponAPIBase = app.Configuration["ServiceUrls:CouponAPI"];
+
 
 
 
@@ -41,7 +72,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
