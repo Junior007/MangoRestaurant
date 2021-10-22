@@ -32,7 +32,7 @@ namespace mango.web.Controllers
         {
             var userId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
             var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _cartService.ApplyCoupon<ResponseDto>(cartDto, accessToken);
+            var response = await _cartService.ApplyCoupon<ResponseDto<CartDto>>(cartDto, accessToken);
 
             if (response != null && response.IsSuccess)
             {
@@ -47,7 +47,7 @@ namespace mango.web.Controllers
         {
             var userId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
             var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _cartService.RemoveCoupon<ResponseDto>(cartDto.CartHeader.UserId, accessToken);
+            var response = await _cartService.RemoveCoupon<ResponseDto<CartDto>>(cartDto.CartHeader.UserId, accessToken);
 
             if (response != null && response.IsSuccess)
             {
@@ -60,7 +60,7 @@ namespace mango.web.Controllers
         {
             var userId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
             var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _cartService.RemoveFromCartAsync<ResponseDto>(cartDetailsId, accessToken);
+            var response = await _cartService.RemoveFromCartAsync<ResponseDto<CartDto>>(cartDetailsId, accessToken);
 
             
             if (response != null && response.IsSuccess)
@@ -82,7 +82,7 @@ namespace mango.web.Controllers
             try
             {
                 var accessToken = await HttpContext.GetTokenAsync("access_token");
-                var response = await _cartService.Checkout<ResponseDto>(cartDto.CartHeader, accessToken);
+                var response = await _cartService.Checkout<ResponseDto<CartDto>>(cartDto.CartHeader, accessToken);
                 if (!response.IsSuccess)
                 {
                     TempData["Error"] = response.DisplayMessage;
@@ -104,7 +104,7 @@ namespace mango.web.Controllers
         {
             var userId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
             var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _cartService.GetCartByUserIdAsnyc<ResponseDto>(userId, accessToken);
+            var response = await _cartService.GetCartByUserIdAsnyc<ResponseDto<CartDto>>(userId, accessToken);
 
             CartDto cartDto = new();
             if(response!=null && response.IsSuccess)
@@ -116,7 +116,7 @@ namespace mango.web.Controllers
             {
                 if (!string.IsNullOrEmpty(cartDto.CartHeader.CouponCode))
                 {
-                    var coupon = await _couponService.GetCoupon<ResponseDto>(cartDto.CartHeader.CouponCode, accessToken);
+                    var coupon = await _couponService.GetCoupon<ResponseDto<CartDto>>(cartDto.CartHeader.CouponCode, accessToken);
                     if (coupon != null && coupon.IsSuccess)
                     {
                         var couponObj = JsonConvert.DeserializeObject<CouponDto>(Convert.ToString(coupon.Result));

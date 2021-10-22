@@ -25,6 +25,7 @@ namespace mango.product.api.Controllers
 
         // GET: api/<ProductController>
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> Get()
@@ -47,6 +48,7 @@ namespace mango.product.api.Controllers
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.BadRequest)]
@@ -69,6 +71,7 @@ namespace mango.product.api.Controllers
         }
         //
         [HttpGet("[action]/{name}")]
+        [Authorize]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> GetByName(string name)
@@ -90,9 +93,9 @@ namespace mango.product.api.Controllers
         }
         //
         [HttpGet("[action]/{category}")]
+        [Authorize]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NotFound)]
-
         public async Task<ActionResult> GetByCategory(string category)
         {
             try
@@ -129,9 +132,9 @@ namespace mango.product.api.Controllers
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.BadRequest)]
-        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
             try
@@ -151,9 +154,9 @@ namespace mango.product.api.Controllers
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.BadRequest)]
-        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Delete(int id, [FromBody] Product product)
         {
             try

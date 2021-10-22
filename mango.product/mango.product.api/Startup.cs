@@ -85,6 +85,8 @@ namespace ordering.api
             });
 
 
+             
+
             DependencyContainer.RegisterServices(services, Configuration);
 
         }
@@ -107,10 +109,10 @@ namespace ordering.api
             }
             app.UseHttpsRedirection();
             app.UseRouting();
-            /*
+            
             app.UseAuthentication();
             app.UseAuthorization();
-            */
+            
 
 
             app.UseEndpoints(endpoints =>

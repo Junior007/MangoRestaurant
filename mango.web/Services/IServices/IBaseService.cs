@@ -8,7 +8,7 @@ namespace mango.web.Services.IServices
 {
     public interface IBaseService: IDisposable
     {
-        ResponseDto responseModel { get; set; }
-        Task<T> SendAsync<T>(ApiRequest apiRequest);
+        //ResponseDto<A> responseModel { get; set; }
+        Task<ResponseDto<B>> SendAsync<B>(ApiRequest apiRequest);
     }
 }

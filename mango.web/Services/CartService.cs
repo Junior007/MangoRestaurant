@@ -16,7 +16,7 @@ namespace mango.web.Services
         {
             _clientFactory = clientFactory;
         }
-        public async Task<T> AddToCartAsync<T>(CartDto cartDto, string token = null)
+        public async Task<ResponseDto<T>> AddToCartAsync<T>(CartDto cartDto, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
@@ -27,7 +27,7 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> ApplyCoupon<T>(CartDto cartDto, string token = null)
+        public async Task<ResponseDto<T>> ApplyCoupon<T>(CartDto cartDto, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
@@ -38,7 +38,7 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> Checkout<T>(CartHeaderDto cartHeader, string token = null)
+        public async Task<ResponseDto<T>> Checkout<T>(CartHeaderDto cartHeader, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
@@ -49,7 +49,7 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> GetCartByUserIdAsnyc<T>(string userId, string token = null)
+        public async Task<ResponseDto<T>> GetCartByUserIdAsnyc<T>(string userId, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
@@ -59,7 +59,7 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> RemoveCoupon<T>(string userId, string token = null)
+        public async Task<ResponseDto<T>> RemoveCoupon<T>(string userId, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
@@ -70,7 +70,7 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> RemoveFromCartAsync<T>(int cartId, string token = null)
+        public async Task<ResponseDto<T>> RemoveFromCartAsync<T>(int cartId, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
@@ -81,7 +81,7 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> UpdateCartAsync<T>(CartDto cartDto, string token = null)
+        public async Task<ResponseDto<T>> UpdateCartAsync<T>(CartDto cartDto, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {

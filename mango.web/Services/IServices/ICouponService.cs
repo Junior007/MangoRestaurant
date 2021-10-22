@@ -8,7 +8,7 @@ namespace mango.web.Services.IServices
 {
     public interface ICouponService
     {
-        Task<T> GetCoupon<T>(string couponCode, string token = null);
+        Task<ResponseDto<T>> GetCoupon<T>(string couponCode, string token = null);
 
     }
 }

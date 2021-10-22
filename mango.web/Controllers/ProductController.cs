@@ -21,9 +21,9 @@ namespace mango.web.Controllers
 
         public async Task<IActionResult> ProductIndex()
         {
-            List<ProductDto> list = await _productService.GetAllProductsAsync<List<ProductDto>>("");
+            var responseDto = await _productService.GetAllProductsAsync("");
 
-            return View(list);
+            return View(responseDto.Result);
 
             /*
             var response = await _productService.GetAllProductsAsync<ResponseDto>("");
@@ -55,7 +55,7 @@ namespace mango.web.Controllers
                 }*/
 
                 var accessToken = "";
-                model = await _productService.CreateProductAsync<ProductDto>(model, accessToken);
+                var responseDto = await _productService.CreateProductAsync(model, accessToken);
                 return RedirectToAction(nameof(ProductIndex));
 
 
@@ -75,7 +75,7 @@ namespace mango.web.Controllers
             return NotFound();*/
 
             var accessToken = "";
-            var model = await _productService.GetProductByIdAsync<ProductDto>(productId, accessToken);
+            var model = await _productService.GetProductByIdAsync(productId, accessToken);
             if(model!= null)
                 return View(model);
             return NotFound();
@@ -94,7 +94,7 @@ namespace mango.web.Controllers
                 }*/
 
                 var accessToken = "";
-                model = await _productService.UpdateProductAsync<ProductDto>(model, accessToken);
+                var responseDto = await _productService.UpdateProductAsync(model, accessToken);
 
             }
             ModelState.Remove("RowVersion");
@@ -116,7 +116,7 @@ namespace mango.web.Controllers
 
 
             var accessToken = "";
-            var model = await _productService.GetProductByIdAsync<ProductDto>(productId, accessToken);
+            var model = await _productService.GetProductByIdAsync(productId, accessToken);
             if (model != null)
                 return View(model);
             return NotFound();
@@ -136,8 +136,8 @@ namespace mango.web.Controllers
                 }*/
 
                 var accessToken = "";
-                var response = await _productService.DeleteProductAsync<bool>(model, accessToken);
-                if (response)
+                var response = await _productService.DeleteProductAsync(model, accessToken);
+                if (response.IsSuccess)
                 {
                     return RedirectToAction(nameof(ProductIndex));
                 }

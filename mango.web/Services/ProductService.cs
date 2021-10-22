@@ -17,9 +17,9 @@ namespace mango.web.Services
             _clientFactory = clientFactory;
         }
 
-        public async Task<T> CreateProductAsync<T>(ProductDto productDto, string token)
+        public async Task<ResponseDto<ProductDto>> CreateProductAsync(ProductDto productDto, string token)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await this.SendAsync<ProductDto>(new ApiRequest()
             {
                ApiType = HttpMethod.Post,
                 Data = productDto,
@@ -28,9 +28,9 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> DeleteProductAsync<T>(ProductDto productDto, string token)
+        public async Task<ResponseDto<bool>> DeleteProductAsync(ProductDto productDto, string token)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await this.SendAsync<bool>(new ApiRequest()
             {
                 ApiType = HttpMethod.Delete,
                 Data = productDto,
@@ -39,9 +39,9 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> GetAllProductsAsync<T>(string token)
+        public async Task<ResponseDto<List<ProductDto>>> GetAllProductsAsync(string token)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await this.SendAsync<List<ProductDto>>(new ApiRequest()
             {
                 ApiType = HttpMethod.Get,
                 Url = SD.ProductAPIBase + "/api/v1/Product",
@@ -49,9 +49,9 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> GetProductByIdAsync<T>(int id, string token)
+        public async Task<ResponseDto<ProductDto>> GetProductByIdAsync(int id, string token)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await this.SendAsync<ProductDto>(new ApiRequest()
             {
                 ApiType = HttpMethod.Get,
                 Url = SD.ProductAPIBase + $"/api/v1/Product/{id}",
@@ -59,9 +59,9 @@ namespace mango.web.Services
             });
         }
 
-        public async Task<T> UpdateProductAsync<T>(ProductDto productDto, string token)
+        public async Task<ResponseDto<ProductDto>> UpdateProductAsync(ProductDto productDto, string token)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await this.SendAsync<ProductDto>(new ApiRequest()
             {
                 ApiType = HttpMethod.Put,
                 Data = productDto,
@@ -69,5 +69,6 @@ namespace mango.web.Services
                 AccessToken = token
             });
         }
+
     }
 }

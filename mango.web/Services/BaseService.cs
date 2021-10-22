@@ -13,18 +13,19 @@ namespace mango.web.Services
 {
     public class BaseService : IBaseService
     {
-        public ResponseDto responseModel { get; set; }
+        //public ResponseDto responseModel { get; set; }
         public IHttpClientFactory httpClient { get; set; }
 
         public BaseService(IHttpClientFactory httpClient)
         {
-            this.responseModel = new ResponseDto();
+            //this.responseModel = new ResponseDto();
             this.httpClient = httpClient;
         }
 
-        public async Task<T> SendAsync<T>(ApiRequest apiRequest)
+
+        public async Task<ResponseDto<T>> SendAsync<T>(ApiRequest apiRequest)
         {
-            //try
+            
             {
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
@@ -50,17 +51,32 @@ namespace mango.web.Services
                 apiResponse = await client.SendAsync(message);
 
 
+                var responseDto = new ResponseDto<T>
+                {
+                    IsSuccess = apiResponse.IsSuccessStatusCode,
+                    
+
+                };
+
                 if (apiResponse.IsSuccessStatusCode)
                 {
                     var apiContent = await apiResponse.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<T>(apiContent);
 
+                    responseDto.DisplayMessage = "OK";
+                    responseDto.Result = result;
 
-
-                    var apiResponseDto = JsonConvert.DeserializeObject<T>(apiContent);
-                    return apiResponseDto;
                 }
-                //TODO: hay que gestionar el error
-                throw new Exception(apiResponse.ReasonPhrase);
+                else {
+                    responseDto.DisplayMessage = "Error";
+                    responseDto.ErrorMessages = apiResponse.RequestMessage.ToString();
+
+
+                }
+
+                return responseDto;
+
+
             }
             /*catch (Exception e)
             {
@@ -80,5 +96,6 @@ namespace mango.web.Services
         {
             GC.SuppressFinalize(true);
         }
+
     }
 }

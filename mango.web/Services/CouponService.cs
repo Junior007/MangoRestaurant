@@ -16,7 +16,7 @@ namespace mango.web.Services
         {
             _clientFactory = clientFactory;
         }
-        public async Task<T> GetCoupon<T>(string couponCode, string token = null)
+        public async Task<ResponseDto<T>> GetCoupon<T>(string couponCode, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
