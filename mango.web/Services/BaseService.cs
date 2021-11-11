@@ -25,7 +25,7 @@ namespace mango.web.Services
 
         public async Task<ResponseDto<T>> SendAsync<T>(ApiRequest apiRequest)
         {
-            
+
             {
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
@@ -54,25 +54,21 @@ namespace mango.web.Services
                 var responseDto = new ResponseDto<T>
                 {
                     IsSuccess = apiResponse.IsSuccessStatusCode,
-                    
-
+                    ErrorMessages = apiResponse.RequestMessage.ToString(),
+                    StatusCode = apiResponse.StatusCode.ToString()
                 };
+
+
 
                 if (apiResponse.IsSuccessStatusCode)
                 {
                     var apiContent = await apiResponse.Content.ReadAsStringAsync();
                     var result = JsonConvert.DeserializeObject<T>(apiContent);
 
-                    responseDto.DisplayMessage = "OK";
                     responseDto.Result = result;
 
                 }
-                else {
-                    responseDto.DisplayMessage = "Error";
-                    responseDto.ErrorMessages = apiResponse.RequestMessage.ToString();
 
-
-                }
 
                 return responseDto;
 

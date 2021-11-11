@@ -19,7 +19,7 @@ namespace mango.web.Controllers
         {
             _productService = productService;
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProductIndex()
         {
             var response = await _productService.GetAllProductsAsync(await _accesToken());
@@ -41,6 +41,7 @@ namespace mango.web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProductCreate(ProductDto model)
         {
 
@@ -63,6 +64,7 @@ namespace mango.web.Controllers
             return View(model);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProductEdit(int productId)
         {
             /*var accessToken = await HttpContext.GetTokenAsync("access_token");
@@ -85,6 +87,7 @@ namespace mango.web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProductEdit(ProductDto model)
         {
             if (ModelState.IsValid)

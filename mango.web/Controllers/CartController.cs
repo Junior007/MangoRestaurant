@@ -85,7 +85,7 @@ namespace mango.web.Controllers
                 var response = await _cartService.Checkout<ResponseDto<CartDto>>(cartDto.CartHeader, accessToken);
                 if (!response.IsSuccess)
                 {
-                    TempData["Error"] = response.DisplayMessage;
+                    TempData["Error"] = response.ErrorMessages;
                     return RedirectToAction(nameof(Checkout));
                 }
                 return RedirectToAction(nameof(Confirmation));
