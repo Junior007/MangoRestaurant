@@ -51,18 +51,23 @@ namespace mango.web.Controllers
         public async Task<IActionResult> Details(int productId)
         {
 
-            ResponseDto <ProductDto> responseDto = await _productService.GetProductByIdAsync(productId, "");
-            return View(responseDto.Result);
+            ResponseDto<ProductDto> responseDto = await _productService.GetProductByIdAsync(productId, "");
 
-            /*
-            ProductDto model = new();
-            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, "");
-            if (response != null && response.IsSuccess)
+            ProductDto productDto = new ProductDto();
+
+            if (responseDto != null && responseDto.IsSuccess)
             {
-                model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+                productDto = responseDto.Result;
             }
-            return View(model);
-            */
+            else
+            {
+                //TODO: mostrar error
+
+            }
+
+
+            return View(productDto);
+
         }
 
         [HttpPost]
@@ -117,7 +122,7 @@ namespace mango.web.Controllers
         [Authorize]
         public async Task<IActionResult> Login()
         {
-
+            
             return RedirectToAction(nameof(Index));
         }
 

@@ -25,7 +25,7 @@ namespace mango.product.api.Controllers
 
         // GET: api/<ProductController>
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> Get()

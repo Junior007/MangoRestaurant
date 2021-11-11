@@ -14,6 +14,7 @@ namespace mango.web.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private async Task<string> _accesToken() { return await HttpContext.GetTokenAsync("access_token"); }
         public ProductController(IProductService productService)
         {
             _productService = productService;
@@ -21,17 +22,17 @@ namespace mango.web.Controllers
 
         public async Task<IActionResult> ProductIndex()
         {
-            var responseDto = await _productService.GetAllProductsAsync("");
+            var response = await _productService.GetAllProductsAsync(await _accesToken());
 
-            return View(responseDto.Result);
+            List<ProductDto> products = new List<ProductDto>();
 
-            /*
-            var response = await _productService.GetAllProductsAsync<ResponseDto>("");
             if (response != null && response.IsSuccess)
             {
-                list = JsonConvert.DeserializeObject<List<ProductDto>>(Convert.ToString(response.Result));
+                products = response.Result;
             }
-            return View(list);*/
+
+            return View(products);
+
         }
 
         public async Task<IActionResult> ProductCreate()
@@ -54,8 +55,7 @@ namespace mango.web.Controllers
                     return RedirectToAction(nameof(ProductIndex));
                 }*/
 
-                var accessToken = "";
-                var responseDto = await _productService.CreateProductAsync(model, accessToken);
+                var responseDto = await _productService.CreateProductAsync(model, await _accesToken());
                 return RedirectToAction(nameof(ProductIndex));
 
 
@@ -74,10 +74,13 @@ namespace mango.web.Controllers
             }
             return NotFound();*/
 
-            var accessToken = "";
-            var model = await _productService.GetProductByIdAsync(productId, accessToken);
-            if(model!= null)
-                return View(model);
+            var response = await _productService.GetProductByIdAsync(productId, await _accesToken());
+            if(response != null && response.IsSuccess)
+            {
+                ProductDto products = response.Result;
+                return View(products);
+            }
+                
             return NotFound();
         }
         [HttpPost]
@@ -86,58 +89,43 @@ namespace mango.web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var accessToken = await HttpContext.GetTokenAsync("access_token");
-                /*var response = await _productService.UpdateProductAsync<ResponseDto>(model, accessToken);
+
+
+                var response = await _productService.UpdateProductAsync(model, await _accesToken());
+
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(ProductIndex));
-                }*/
-
-                var accessToken = "";
-                var responseDto = await _productService.UpdateProductAsync(model, accessToken);
+                }
 
             }
-            ModelState.Remove("RowVersion");
             return View(model);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProductDelete(int productId)
         {
-            /*var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, accessToken);
+            var response = await _productService.GetProductByIdAsync(productId, await _accesToken());
+
             if (response != null && response.IsSuccess)
             {
-                ProductDto model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+                ProductDto model =response.Result;
                 return View(model);
             }
-            return NotFound();*/
 
-
-
-            var accessToken = "";
-            var model = await _productService.GetProductByIdAsync(productId, accessToken);
-            if (model != null)
-                return View(model);
             return NotFound();
+
         }
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProductDelete(ProductDto model)
         {
             if (ModelState.IsValid)
-            {/*
-                var accessToken = await HttpContext.GetTokenAsync("access_token");
-                var response = await _productService.DeleteProductAsync<ResponseDto>(model.ProductId, accessToken);
-                if (response.IsSuccess)
-                {
-                    return RedirectToAction(nameof(ProductIndex));
-                }*/
+            {
 
-                var accessToken = "";
-                var response = await _productService.DeleteProductAsync(model, accessToken);
-                if (response.IsSuccess)
+                var response = await _productService.DeleteProductAsync(model, await _accesToken());
+                if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(ProductIndex));
                 }
