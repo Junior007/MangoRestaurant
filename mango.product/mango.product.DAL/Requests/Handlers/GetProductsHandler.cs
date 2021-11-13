@@ -1,10 +1,10 @@
 ﻿using Dapper;
 using mango.product.DAL.Models;
-using mango.product.DAL.Request.QueryModels;
+using mango.product.DAL.Requests.QueryModels;
 using MediatR;
 using store.dal.DataConnections;
 
-namespace mango.product.DAL.Request.Handlers
+namespace mango.product.DAL.Requests.Handlers
 {
     class GetProductsHandler : IRequestHandler<GetProducts, List<Product>>
     {

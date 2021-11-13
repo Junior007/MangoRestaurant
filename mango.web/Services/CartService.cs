@@ -10,11 +10,11 @@ namespace mango.web.Services
 {
     public class CartService : BaseService,ICartService
     {
-        private readonly IHttpClientFactory _clientFactory;
+        //private readonly IHttpClientFactory _clientFactory;
 
-        public CartService(IHttpClientFactory clientFactory) : base(clientFactory)
+        public CartService(IHttpClientFactory clientFactory, ILogger<CartService> logger) : base(clientFactory, logger)
         {
-            _clientFactory = clientFactory;
+            //_clientFactory = clientFactory;
         }
         public async Task<ResponseDto<T>> AddToCartAsync<T>(CartDto cartDto, string token = null)
         {

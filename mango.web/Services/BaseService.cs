@@ -15,17 +15,18 @@ namespace mango.web.Services
     {
         //public ResponseDto responseModel { get; set; }
         public IHttpClientFactory httpClient { get; set; }
-
-        public BaseService(IHttpClientFactory httpClient)
+        private readonly ILogger<BaseService> _logger;
+        public BaseService(IHttpClientFactory httpClient, ILogger<BaseService> logger)
         {
-            //this.responseModel = new ResponseDto();
             this.httpClient = httpClient;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 
         public async Task<ResponseDto<T>> SendAsync<T>(ApiRequest apiRequest)
         {
 
+            try
             {
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
@@ -68,24 +69,22 @@ namespace mango.web.Services
                     responseDto.Result = result;
 
                 }
+                else
+                {
+                    _logger.LogError(string.Format("Error {0} - Status Code{1}", responseDto.ErrorMessages, responseDto.StatusCode));
+
+                }
 
 
                 return responseDto;
 
 
             }
-            /*catch (Exception e)
+            catch (Exception ex)
             {
-                var dto = new ResponseDto
-                {
-                    DisplayMessage = "Error",
-                    ErrorMessages = new List<string> { Convert.ToString(e.Message) },
-                    IsSuccess = false
-                };
-                var res = JsonConvert.SerializeObject(dto);
-                var apiResponseDto = JsonConvert.DeserializeObject<T>(res);
-                return apiResponseDto;
-            }*/
+                _logger.LogError(string.Format("Error in {0}: stack trace{1}", ex.Message, ex.StackTrace));
+                return new ResponseDto<T> { ErrorMessages = ex.Message, IsSuccess = false };
+            }
         }
 
         public void Dispose()

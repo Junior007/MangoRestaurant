@@ -1,6 +1,6 @@
 ﻿using mango.product.DAL.Interfaces;
 using mango.product.DAL.Models;
-using mango.product.DAL.Request.QueryModels;
+using mango.product.DAL.Requests.QueryModels;
 using MediatR;
 
 namespace mango.product.DAL.Services

@@ -2,7 +2,7 @@
 using MediatR;
 
 
-namespace mango.product.DAL.Request.QueryModels
+namespace mango.product.DAL.Requests.QueryModels
 {
     internal class GetProductsByName : IRequest<List<Product>>
     {

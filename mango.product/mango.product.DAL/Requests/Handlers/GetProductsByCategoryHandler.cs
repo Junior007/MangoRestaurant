@@ -1,29 +1,29 @@
 ﻿using Dapper;
 using mango.product.DAL.Models;
-using mango.product.DAL.Request.QueryModels;
+using mango.product.DAL.Requests.QueryModels;
 using MediatR;
 using store.dal.DataConnections;
 
-namespace mango.product.DAL.Request.Handlers
+namespace mango.product.DAL.Requests.Handlers
 {
-    internal class GetProductsByNameHandler : IRequestHandler<GetProductsByName, List<Product>>
+    public class GetProductsByCategoryHandler : IRequestHandler<GetProductsByCategory, List<Product>>
     {
 
         private readonly IDatabaseBuilder _sqlDatabaseBuilder;
 
-        public GetProductsByNameHandler(IDatabaseBuilder sqlDatabaseBuilder)
+        public GetProductsByCategoryHandler(IDatabaseBuilder sqlDatabaseBuilder)
         {
             this._sqlDatabaseBuilder = sqlDatabaseBuilder;
         }
 
-        public async Task<List<Product>> Handle(GetProductsByName request, CancellationToken cancellationToken)
+        public async Task<List<Product>> Handle(GetProductsByCategory request, CancellationToken cancellationToken)
         {
             var products = new List<Product>();
 
             using (Database database = DatabaseFactory.CreateDatabase(_sqlDatabaseBuilder))
             {
 
-                List<string> names = new List<string> { request.Name };
+                List<string> categoryNames = new List<string> { request.CategoryName };
 
                 string sql = $"  SELECT [ProductId] " +
                               $"       ,[Name] " +
@@ -33,12 +33,12 @@ namespace mango.product.DAL.Request.Handlers
                               $"       ,[ImageUrl] " +
                               $"       ,[RowVersion] " +
                               $"  FROM [Products] " +
-                              $" WHERE Name=@names";
+                              $" WHERE CategoryName=@categoryNames";
 
 
                 database.Connection.Open();
 
-                products = (List<Product>)(await database.Connection.QueryAsync<Product>(sql, new { names }));
+                products = (List<Product>)(await database.Connection.QueryAsync<Product>(sql, new { categoryNames}));
 
 
             }

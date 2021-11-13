@@ -10,11 +10,11 @@ namespace mango.web.Services
 {
     public class CouponService : BaseService,ICouponService
     {
-        private readonly IHttpClientFactory _clientFactory;
+        //private readonly IHttpClientFactory _clientFactory;
 
-        public CouponService(IHttpClientFactory clientFactory) : base(clientFactory)
+        public CouponService(IHttpClientFactory clientFactory, ILogger<CartService> logger) : base(clientFactory, logger)
         {
-            _clientFactory = clientFactory;
+            //_clientFactory = clientFactory;
         }
         public async Task<ResponseDto<T>> GetCoupon<T>(string couponCode, string token = null)
         {

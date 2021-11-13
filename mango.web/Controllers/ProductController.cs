@@ -14,28 +14,32 @@ namespace mango.web.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
-        private async Task<string> _accesToken() { return await HttpContext.GetTokenAsync("access_token"); }
+        private readonly ILogger<ProductController> _logger;
+        private async Task<string> _accesToken() { return await HttpContext.GetTokenAsync("access_token") ?? throw new ArgumentNullException("access_token"); }
+
+
         public ProductController(IProductService productService)
         {
-            _productService = productService;
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService)); ;
+
         }
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProductIndex()
         {
-            var response = await _productService.GetAllProductsAsync(await _accesToken());
+            var responseDto = await _productService.GetAllProductsAsync(await _accesToken());
 
             List<ProductDto> products = new List<ProductDto>();
 
-            if (response != null && response.IsSuccess)
+            if ( responseDto.IsSuccess)
             {
-                products = response.Result;
+                products = responseDto.Result;
             }
 
             return View(products);
 
         }
 
-        public async Task<IActionResult> ProductCreate()
+        public IActionResult ProductCreate()
         {
             return View();
         }
@@ -49,16 +53,12 @@ namespace mango.web.Controllers
 
             if (ModelState.IsValid)
             {
-                //var accessToken = await HttpContext.GetTokenAsync("access_token");
-                /*var response = await _productService.CreateProductAsync<ResponseDto>(model, accessToken);
-                if (response != null && response.IsSuccess)
-                {
-                    return RedirectToAction(nameof(ProductIndex));
-                }*/
 
                 var responseDto = await _productService.CreateProductAsync(model, await _accesToken());
-                return RedirectToAction(nameof(ProductIndex));
-
+                if (responseDto.IsSuccess)
+                {
+                    return RedirectToAction(nameof(ProductIndex));
+                }
 
             }
             return View(model);
@@ -67,22 +67,14 @@ namespace mango.web.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProductEdit(int productId)
         {
-            /*var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, accessToken);
-            if (response != null && response.IsSuccess)
-            {
-                ProductDto model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
-                return View(model);
-            }
-            return NotFound();*/
 
-            var response = await _productService.GetProductByIdAsync(productId, await _accesToken());
-            if(response != null && response.IsSuccess)
+            var responsDto = await _productService.GetProductByIdAsync(productId, await _accesToken());
+            if (responsDto.IsSuccess)
             {
-                ProductDto products = response.Result;
+                ProductDto products = responsDto.Result;
                 return View(products);
             }
-                
+
             return NotFound();
         }
         [HttpPost]
@@ -94,9 +86,9 @@ namespace mango.web.Controllers
             {
 
 
-                var response = await _productService.UpdateProductAsync(model, await _accesToken());
+                var responsDto = await _productService.UpdateProductAsync(model, await _accesToken());
 
-                if (response != null && response.IsSuccess)
+                if (responsDto.IsSuccess)
                 {
                     return RedirectToAction(nameof(ProductIndex));
                 }
@@ -108,11 +100,11 @@ namespace mango.web.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProductDelete(int productId)
         {
-            var response = await _productService.GetProductByIdAsync(productId, await _accesToken());
+            var responsDto = await _productService.GetProductByIdAsync(productId, await _accesToken());
 
-            if (response != null && response.IsSuccess)
+            if (responsDto.IsSuccess)
             {
-                ProductDto model =response.Result;
+                ProductDto model = responsDto.Result;
                 return View(model);
             }
 
@@ -127,8 +119,8 @@ namespace mango.web.Controllers
             if (ModelState.IsValid)
             {
 
-                var response = await _productService.DeleteProductAsync(model, await _accesToken());
-                if (response != null && response.IsSuccess)
+                var responsDto = await _productService.DeleteProductAsync(model, await _accesToken());
+                if (responsDto.IsSuccess)
                 {
                     return RedirectToAction(nameof(ProductIndex));
                 }
