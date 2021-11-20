@@ -28,7 +28,7 @@ builder.Services.AddAuthentication(options =>
     .AddCookie("Cookies", c => c.ExpireTimeSpan = TimeSpan.FromMinutes(10))
     .AddOpenIdConnect("oidc", options =>
     {
-        options.Authority = builder.Configuration["ServiceUrls:IdentityAPI"];
+        options.Authority = builder.Configuration["ServiceUrls:IdentityAPIBase"];
         options.GetClaimsFromUserInfoEndpoint = true;
         options.ClientId = "mango";
         options.ClientSecret = "My clave!#2";
