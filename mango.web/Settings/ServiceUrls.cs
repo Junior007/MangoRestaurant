@@ -2,7 +2,6 @@
 {
     public class ServiceUrls : IServiceUrls
     {
-        public string IdentityAPIBase { get; set; }
         public string ProductAPIBase { get; set; }
         public string ShoppingCartAPIBase { get; set; }
         public string CouponAPIBase { get; set; }

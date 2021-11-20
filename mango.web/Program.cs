@@ -8,10 +8,6 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 
-/*SD.ProductAPIBase = builder.Configuration["ServiceUrls:ProductAPI"];
-SD.ShoppingCartAPIBase = builder.Configuration["ServiceUrls:ShoppingCartAPI"];
-SD.CouponAPIBase = builder.Configuration["ServiceUrls:CouponAPI"];*/
-
 builder.Services.Configure<ServiceUrls>(builder.Configuration.GetSection(nameof(ServiceUrls)));
 
 builder.Services.AddSingleton<IServiceUrls>(sp => sp.GetRequiredService<IOptions<ServiceUrls>>().Value);
