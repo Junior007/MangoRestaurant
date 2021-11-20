@@ -1,5 +1,6 @@
 ﻿using mango.web.Models;
 using mango.web.Services.IServices;
+using mango.web.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,11 @@ namespace mango.web.Services
 {
     public class ProductService : BaseService, IProductService
     {
-        //private readonly IHttpClientFactory _clientFactory;
 
-        public ProductService(IHttpClientFactory clientFactory, ILogger<CartService> logger) : base(clientFactory, logger)
+        private readonly IServiceUrls _serviceUrls;
+        public ProductService(IHttpClientFactory clientFactory, IServiceUrls serviceUrls, ILogger<CartService> logger) : base(clientFactory, logger)
         {
-            //_clientFactory = clientFactory;
+            _serviceUrls=serviceUrls;
         }
 
         public async Task<ResponseDto<ProductDto>> CreateProductAsync(ProductDto productDto, string token)
@@ -23,7 +24,7 @@ namespace mango.web.Services
             {
                ApiType = HttpMethod.Post,
                 Data = productDto,
-                Url = SD.ProductAPIBase + "/api/v1/Product",
+                Url = _serviceUrls.ProductAPIBase + "/api/v1/Product",
                 AccessToken = token
             });
         }
@@ -34,7 +35,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Delete,
                 Data = productDto,
-                Url = SD.ProductAPIBase + $"/api/v1/Product/{productDto.ProductId}",
+                Url = _serviceUrls.ProductAPIBase + $"/api/v1/Product/{productDto.ProductId}",
                 AccessToken = token
             });
         }
@@ -44,7 +45,7 @@ namespace mango.web.Services
             return await this.SendAsync<List<ProductDto>>(new ApiRequest()
             {
                 ApiType = HttpMethod.Get,
-                Url = SD.ProductAPIBase + "/api/v1/Product",
+                Url = _serviceUrls.ProductAPIBase + "/api/v1/Product",
                 AccessToken = token
             });
         }
@@ -54,7 +55,7 @@ namespace mango.web.Services
             return await this.SendAsync<ProductDto>(new ApiRequest()
             {
                 ApiType = HttpMethod.Get,
-                Url = SD.ProductAPIBase + $"/api/v1/Product/{id}",
+                Url = _serviceUrls.ProductAPIBase + $"/api/v1/Product/{id}",
                 AccessToken = token
             });
         }
@@ -65,7 +66,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Put,
                 Data = productDto,
-                Url = SD.ProductAPIBase + $"/api/v1/Product/{productDto.ProductId}",
+                Url = _serviceUrls.ProductAPIBase + $"/api/v1/Product/{productDto.ProductId}",
                 AccessToken = token
             });
         }

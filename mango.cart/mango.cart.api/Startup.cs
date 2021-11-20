@@ -1,11 +1,11 @@
-using HealthChecks.UI.Client;
-using mango.product.api.Health;
-using mango.product.IoC;
+﻿using HealthChecks.UI.Client;
+//using mango.cart.api.Health;
+using mango.cart.IoC;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-namespace mango.product.api
+namespace mango.cart.api
 {
     public class Startup
     {
@@ -25,7 +25,7 @@ namespace mango.product.api
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new() { Title = "mango.product", Version = "v1" });
+                c.SwaggerDoc("v1", new() { Title = "mango.cart", Version = "v1" });
                 c.EnableAnnotations();
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -57,9 +57,9 @@ namespace mango.product.api
 
 
             //https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-3.1
-            services.AddHealthChecks()
+            /*services.AddHealthChecks()
              .AddCheck<GeneralCheck>(nameof(GeneralCheck))
-             .AddCheck<ProductDBCheck>(nameof(ProductDBCheck)); //mi chequeo personalizado
+             .AddCheck<ProductDBCheck>(nameof(ProductDBCheck));*/ //mi chequeo personalizado
                                                                 //.AddDbContextCheck<OrderContext>(); //chequeo de la base de datos
 
 
@@ -83,7 +83,7 @@ namespace mango.product.api
             });
 
 
-             
+
 
             DependencyContainer.RegisterServices(services, Configuration);
 
@@ -97,7 +97,7 @@ namespace mango.product.api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ordering.api v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "cart.api v1"));
 
             }
             else
@@ -107,10 +107,10 @@ namespace mango.product.api
             }
             app.UseHttpsRedirection();
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
 
 
             app.UseEndpoints(endpoints =>
@@ -129,5 +129,4 @@ namespace mango.product.api
 
 
     }
-
 }

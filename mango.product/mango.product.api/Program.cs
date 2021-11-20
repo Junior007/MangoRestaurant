@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ordering.api
+namespace mango.product.api
 {
     public class Program
     {

@@ -1,5 +1,6 @@
 ﻿using mango.web.Models;
 using mango.web.Services.IServices;
+using mango.web.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +11,18 @@ namespace mango.web.Services
 {
     public class CouponService : BaseService,ICouponService
     {
-        //private readonly IHttpClientFactory _clientFactory;
+        private readonly IServiceUrls _serviceUrls;
 
-        public CouponService(IHttpClientFactory clientFactory, ILogger<CartService> logger) : base(clientFactory, logger)
+        public CouponService(IHttpClientFactory clientFactory, IServiceUrls serviceUrls, ILogger<CartService> logger) : base(clientFactory, logger)
         {
-            //_clientFactory = clientFactory;
+            _serviceUrls = serviceUrls;
         }
         public async Task<ResponseDto<T>> GetCoupon<T>(string couponCode, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = HttpMethod.Get,
-                Url = SD.CouponAPIBase + "/api/coupon/" + couponCode,
+                Url = _serviceUrls.CouponAPIBase + "/api/coupon/" + couponCode,
                 AccessToken = token
             });
         }

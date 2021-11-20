@@ -1,5 +1,6 @@
 ﻿using mango.web.Models;
 using mango.web.Services.IServices;
+using mango.web.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,12 @@ namespace mango.web.Services
 {
     public class CartService : BaseService,ICartService
     {
-        //private readonly IHttpClientFactory _clientFactory;
 
-        public CartService(IHttpClientFactory clientFactory, ILogger<CartService> logger) : base(clientFactory, logger)
+        private readonly IServiceUrls _serviceUrls;
+        public CartService(IHttpClientFactory clientFactory, IServiceUrls serviceUrls, ILogger<CartService> logger) : base(clientFactory, logger)
         {
-            //_clientFactory = clientFactory;
+
+            _serviceUrls=serviceUrls;
         }
         public async Task<ResponseDto<T>> AddToCartAsync<T>(CartDto cartDto, string token = null)
         {
@@ -22,7 +24,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Post,
                 Data = cartDto,
-                Url = SD.ShoppingCartAPIBase + "/api/cart/AddCart",
+                Url = _serviceUrls.ShoppingCartAPIBase + "/api/cart/AddCart",
                 AccessToken = token
             });
         }
@@ -33,7 +35,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Post,
                 Data = cartDto,
-                Url = SD.ShoppingCartAPIBase + "/api/cart/ApplyCoupon",
+                Url = _serviceUrls.ShoppingCartAPIBase + "/api/cart/ApplyCoupon",
                 AccessToken = token
             });
         }
@@ -44,7 +46,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Post,
                 Data = cartHeader,
-                Url = SD.ShoppingCartAPIBase + "/api/cart/checkout",
+                Url = _serviceUrls.ShoppingCartAPIBase + "/api/cart/checkout",
                 AccessToken = token
             });
         }
@@ -54,7 +56,7 @@ namespace mango.web.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = HttpMethod.Get,
-                Url = SD.ShoppingCartAPIBase + "/api/cart/GetCart/" + userId,
+                Url = _serviceUrls.ShoppingCartAPIBase + "/api/cart/GetCart/" + userId,
                 AccessToken = token
             });
         }
@@ -65,7 +67,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Post,
                 Data = userId,
-                Url = SD.ShoppingCartAPIBase + "/api/cart/RemoveCoupon",
+                Url = _serviceUrls.ShoppingCartAPIBase + "/api/cart/RemoveCoupon",
                 AccessToken = token
             });
         }
@@ -76,7 +78,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Post,
                 Data = cartId,
-                Url = SD.ShoppingCartAPIBase + "/api/cart/RemoveCart",
+                Url = _serviceUrls.ShoppingCartAPIBase + "/api/cart/RemoveCart",
                 AccessToken = token
             });
         }
@@ -87,7 +89,7 @@ namespace mango.web.Services
             {
                 ApiType = HttpMethod.Post,
                 Data = cartDto,
-                Url = SD.ShoppingCartAPIBase + "/api/cart/UpdateCart",
+                Url = _serviceUrls.ShoppingCartAPIBase + "/api/cart/UpdateCart",
                 AccessToken = token
             });
         }
