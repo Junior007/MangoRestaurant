@@ -66,7 +66,7 @@ namespace mango.product.api
 
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
-                options.Authority = "https://localhost:7226/";
+                options.Authority = options.Authority = Configuration["ServiceUrls:IdentityAPIBase"];//"https://localhost:7226/";
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false

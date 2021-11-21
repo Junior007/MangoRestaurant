@@ -1,4 +1,6 @@
 using mango.web;
+using mango.web.Infrastructure;
+using mango.web.Infrastructure.Bindings;
 using mango.web.Services;
 using mango.web.Services.IServices;
 using mango.web.Settings;
@@ -13,7 +15,12 @@ builder.Services.Configure<ServiceUrls>(builder.Configuration.GetSection(nameof(
 builder.Services.AddSingleton<IServiceUrls>(sp => sp.GetRequiredService<IOptions<ServiceUrls>>().Value);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.ModelBinderProviders.Insert(0, new BindingProvider());
+});
+
 
 //Add security options
 builder.Services.AddAuthentication(options =>
